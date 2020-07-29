@@ -1,0 +1,19 @@
+.block {
+  background-color: white;
+  width: 500px;
+  height: 200px;
+  border: 1px solid black;
+}
+li {
+  list-style: none;
+}
+.btn {
+  margin: 10px;
+}
+.name {
+  text-align: center;
+  font-size: xx-large;
+}
+.people {
+  margin-top: 10px;
+}
