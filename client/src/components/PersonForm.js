@@ -1,33 +1,51 @@
-import React, { useState } from "react";
-
-const PersonForm = ({ addPerson }) => {
+import React, { useState, useContext, useEffect } from "react";
+//import { ADD_PERSON } from "../context/types";
+import PersonContext from "../context/personContext";
+const PersonForm = () => {
   //const {firstname, lastname} = person;
-  const [person, setPerson] = useState({});
+  const personContext = useContext(PersonContext);
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const { addPerson, setCurrent, current, updatePerson } = personContext;
+  useEffect(() => {
+    if (current !== null) {
+      if (current.firstname) setFirstname(current.firstname);
+      if (current.lastname) setLastname(current.lastname);
+      const pid = current._id;
+    } else {
+      setFirstname("");
+      setLastname("");
+    }
+  }, [personContext, current]);
   const onSubmit = (e) => {
     e.preventDefault();
     const newPerson = {
-      firstname: e.target.firstname.value,
-      lastname: e.target.lastname.value,
+      firstname,
+      lastname,
     };
-    setPerson(newPerson);
-    addPerson(newPerson);
-    setPerson({ firstname: "", lastname: "" });
-    e.target.firstname.value = "";
-    e.target.lastname.value = "";
+    if (current === null) addPerson(newPerson);
+    else {
+      // console.log(newPerson);
+
+      updatePerson({ ...newPerson, _id: current._id });
+      setCurrent(null);
+    }
   };
 
   return (
     <div>
-      <h1>Add Person</h1>
-      <form onSubmit={onSubmit}>
+      <h1>{current === null ? "Add Person" : "Edit Person"}</h1>
+      <form>
         <div className="form-group">
           <label htmlFor="firstname">FirstName</label>
           <input
             type="text"
             className="form-control"
             placeholder="FirstName"
-            required
+            reqiuired
             name="firstname"
+            value={firstname}
+            onChange={(e) => setFirstname(e.target.value)}
           />
           <label htmlFor="lastname">LastName</label>
           <input
@@ -36,8 +54,12 @@ const PersonForm = ({ addPerson }) => {
             placeholder="LastName"
             required
             name="lastname"
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
           />
-          <button className="btn btn-success">Add Person</button>
+          <button className="btn btn-success" onClick={onSubmit}>
+            {current === null ? "Add Person" : "Edit Person"}
+          </button>
         </div>
       </form>
     </div>

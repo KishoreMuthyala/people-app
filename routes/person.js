@@ -53,15 +53,15 @@ router.delete("/:id", (req, res) => {
   Person.findById(req.params.id)
     .then(() => {
       Person.findByIdAndRemove(req.params.id)
-        .then(() => res.send("Deleted Sucessfully"))
+        .then(() => res.json({ message: "Deleted Sucessfully" }))
         .catch((err) => {
           console.log(err.message);
-          res.send("Deletion failed");
+          res.json({ message: "Deletion Failed" });
         });
     })
     .catch((err) => {
       console.log(err.message);
-      res.send("Person not found");
+      res.json({ message: "Person not found" });
     });
 });
 
@@ -73,7 +73,7 @@ router.put("/:id", (req, res) => {
   Person.findById(req.params.id)
     .then(() => {
       Person.findByIdAndUpdate(req.params.id, { $set: person }, { new: true })
-        .then(() => res.send("Update Sucessful"))
+        .then((data) => res.json(data))
         .catch((err) => {
           console.log(err);
           res.send("Update unsucessful");
